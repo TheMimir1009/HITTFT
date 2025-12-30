@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>판타지 오토배틀러</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- 상단 정보바 -->
+        <header id="info-bar">
+            <div class="info-item">
+                <span class="label">HP</span>
+                <span id="player-hp" class="value">100</span>
+            </div>
+            <div class="info-item">
+                <span class="label">골드</span>
+                <span id="player-gold" class="value">10</span>
+            </div>
+            <div class="info-item">
+                <span class="label">레벨</span>
+                <span id="player-level" class="value">1</span>
+                <span class="sub-value">(<span id="player-xp">0</span>/<span id="xp-needed">2</span>)</span>
+            </div>
+            <div class="info-item">
+                <span class="label">배치</span>
+                <span id="placed-units" class="value">0</span>
+                <span class="sub-value">/ <span id="max-units">1</span></span>
+            </div>
+            <div class="info-item">
+                <span class="label">라운드</span>
+                <span id="current-round" class="value">1</span>
+                <span class="sub-value">/ 10</span>
+            </div>
+            <div class="info-item timer-info">
+                <span class="label">시간</span>
+                <span id="timer-display" class="value">30</span>
+                <span class="sub-value" id="timer-label">준비</span>
+            </div>
+            <div class="info-item streak-info">
+                <span id="streak-display"></span>
+            </div>
+        </header>
+
+        <!-- 시너지 패널 -->
+        <aside id="synergy-panel">
+            <h3>활성 시너지</h3>
+            <div id="synergy-list"></div>
+        </aside>
+
+        <!-- 메인 게임 영역 -->
+        <main id="game-area">
+            <!-- 적 영역 표시 -->
+            <div id="enemy-label" class="area-label">적 영역</div>
+
+            <!-- 4x4 게임 보드 -->
+            <div id="game-board">
+                <!-- 그리드 셀은 JavaScript로 생성 -->
+            </div>
+
+            <!-- 플레이어 영역 표시 -->
+            <div id="player-label" class="area-label">배치 영역</div>
+        </main>
+
+        <!-- 대기석 (벤치) -->
+        <section id="bench-area">
+            <h3>대기석</h3>
+            <div id="bench">
+                <!-- 8칸의 벤치 슬롯 -->
+            </div>
+        </section>
+
+        <!-- 상점 -->
+        <section id="shop-area">
+            <h3>상점</h3>
+            <div id="shop-units">
+                <!-- 5개의 상점 슬롯 -->
+            </div>
+            <div id="shop-actions">
+                <button id="btn-reroll" class="action-btn">
+                    <span class="btn-text">리롤</span>
+                    <span class="btn-cost">2G</span>
+                </button>
+                <button id="btn-buy-xp" class="action-btn">
+                    <span class="btn-text">경험치 구매</span>
+                    <span class="btn-cost">4G</span>
+                </button>
+                <button id="btn-start-battle" class="action-btn primary">
+                    <span class="btn-text">전투 시작</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 유닛 정보 툴팁 -->
+        <div id="unit-tooltip" class="tooltip hidden">
+            <div class="tooltip-header">
+                <span class="unit-name"></span>
+                <span class="unit-cost"></span>
+            </div>
+            <div class="tooltip-body">
+                <div class="unit-stats"></div>
+                <div class="unit-skill"></div>
+                <div class="unit-synergies"></div>
+            </div>
+        </div>
+
+        <!-- 전투 결과 모달 -->
+        <div id="battle-result-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2 id="battle-result-title"></h2>
+                <p id="battle-result-message"></p>
+                <div id="battle-rewards"></div>
+                <button id="btn-continue" class="action-btn primary">계속하기</button>
+            </div>
+        </div>
+
+        <!-- 게임 종료 모달 -->
+        <div id="game-over-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2 id="game-over-title"></h2>
+                <p id="game-over-message"></p>
+                <div id="game-stats"></div>
+                <button id="btn-restart" class="action-btn primary">다시 시작</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 파일들 (리팩토링된 구조) -->
+
+    <!-- 유틸리티 -->
+    <script src="js/debug.js"></script>
+    <script src="js/hexUtils.js"></script>
+    <script src="js/utils.js"></script>
+
+    <!-- 데이터 -->
+    <script src="js/data/units.js"></script>
+    <script src="js/data/waves.js"></script>
+    <script src="js/data/synergies.js"></script>
+
+    <!-- 유닛 시스템 -->
+    <script src="js/unit/UnitRenderer.js"></script>
+    <script src="js/unit/SkillSystem.js"></script>
+    <script src="js/unit/Unit.js"></script>
+    <script src="js/unit/EnemyUnit.js"></script>
+
+    <!-- 보드 시스템 -->
+    <script src="js/board/DragDropManager.js"></script>
+    <script src="js/board/Board.js"></script>
+
+    <!-- 전투 시스템 -->
+    <script src="js/combat/AttackSystem.js"></script>
+    <script src="js/combat/MovementSystem.js"></script>
+    <script src="js/combat/CombatManager.js"></script>
+
+    <!-- 매니저 -->
+    <script src="js/bench.js"></script>
+    <script src="js/shop.js"></script>
+    <script src="js/synergy.js"></script>
+    <script src="js/managers/UnitManager.js"></script>
+
+    <!-- UI -->
+    <script src="js/ui/TooltipManager.js"></script>
+    <script src="js/ui/ModalManager.js"></script>
+    <script src="js/ui/UIController.js"></script>
+
+    <!-- 코어 -->
+    <script src="js/core/GameState.js"></script>
+    <script src="js/core/TimerManager.js"></script>
+    <script src="js/core/GameController.js"></script>
+
+    <!-- 진입점 -->
+    <script src="js/main.js"></script>
+</body>
+</html>
